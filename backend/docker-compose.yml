@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: medora
+      POSTGRES_PASSWORD: medora_pwd
+      POSTGRES_DB: medora_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  backend:
+    build: .
+    depends_on: ["db"]
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://medora:medora_pwd@db:5432/medora_db
+      - SECRET_KEY=replace-me-with-secure-random
+volumes:
+  pgdata:
